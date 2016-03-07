@@ -1,0 +1,17 @@
+### JDeveloper template
+# default application storage directory used by the IDE Performance Cache feature
+.data/
+
+# idea project files
+.idea/
+*.iml
+.gradle/
+
+# default output directories
+classes/
+deploy/
+javadoc/
+build/
+
+# lock file, a part of Oracle Credential Store Framework
+*.class
