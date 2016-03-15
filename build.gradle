@@ -25,7 +25,7 @@ dependencies {
     // Neo4j database
     compile "org.neo4j:neo4j:${neo4jVersion}"
 
-    // Neo4j server (only need to run Neo4j browser.
+    // Neo4j server (only need to run Neo4j browser).
     compile "org.neo4j.app:neo4j-server:${neo4jVersion}"
 
     // Cucumber, BDD test framework.
