@@ -31,8 +31,11 @@ public class CRUDStepdefs {
 
     @Given("^the database with (\\d+) crosses$")
     public void the_database_with_crosses(int init_state) throws Throwable {
-        for(int i = 0; i < init_state; i++) {
-            db.createNode(Nodes.CROSS);
+        try (Transaction tx = db.beginTx()) {
+            for (int i = 0; i < init_state; i++) {
+                db.createNode(Nodes.CROSS);
+            }
+            tx.success();
         }
     }
 
