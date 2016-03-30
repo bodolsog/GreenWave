@@ -13,15 +13,21 @@ import pl.bodolsog.greenwave.model.Crosses;
 import pl.bodolsog.greenwave.model.DatabaseSingleton;
 import pl.bodolsog.greenwave.model.Nodes;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 public class CRUDStepdefs {
     private GraphDatabaseService db;
+    private Crosses crosses;
+    private ArrayList<Long> ids;
 
     @Before("@db")
     public void setUpDatabase(){
         db = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        crosses = new Crosses(db);
+        ids = new ArrayList<>();
     }
 
     @After("@db")
@@ -29,24 +35,30 @@ public class CRUDStepdefs {
         db.shutdown();
     }
 
-    @Given("^the database with (\\d+) crosses$")
+    @Given("^the database with (\\d+) cross\\(es\\)$")
     public void the_database_with_crosses(int init_state) throws Throwable {
         try (Transaction tx = db.beginTx()) {
+            Node n = null;
             for (int i = 0; i < init_state; i++) {
-                db.createNode(Nodes.CROSS);
+                n = db.createNode(Nodes.CROSS);
+                ids.add(n.getId());
             }
             tx.success();
         }
     }
 
-    @When("^the App User add a (\\d+)$")
-    public void the_App_User_add_a(int added_crosses) throws Throwable {
-        for(int i = 0; i < added_crosses; i++) {
-            new Crosses(db).create(new Cross());
-        }
+    @When("^the App User add the cross$")
+    public void the_App_User_add_a() throws Throwable {
+        crosses.create(new Cross());
     }
 
-    @Then("^the database have (\\d+) crosses$")
+    @When("^the App User delete the cross$")
+    public void the_App_User_delete_a_cross_es() throws Throwable {
+        crosses.delete(ids.get(0));
+        ids.remove(0);
+    }
+
+    @Then("^the database have (\\d+) cross\\(es\\)$")
     public void the_database_have_crosses(int end_state) throws Throwable {
         int count = 0;
         try (Transaction tx = db.beginTx()) {

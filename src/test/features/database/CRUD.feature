@@ -6,14 +6,27 @@ Feature: CRUD
   # Create
   @db
   Scenario Outline: Adding cross to database
-    Given the database with <init_state> crosses
-    When the App User add a <added_crosses>
-    Then the database have <end_state> crosses
+    Given the database with <init_state> cross(es)
+    When the App User add the cross
+    Then the database have <end_state> cross(es)
     Examples:
-      | init_state | added_crosses | end_state |
-      | 0          | 1             | 1         |
-      | 1          | 1             | 2         |
-      | 5          | 1             | 6         |
-      | 10         | 1             | 11        |
+      | init_state | end_state |
+      | 0          | 1         |
+      | 1          | 2         |
+      | 5          | 6         |
+      | 10         | 11        |
 
 
+  # Read
+
+  # Update
+
+  # Delete
+  @db
+  Scenario Outline: Delete cross from database
+    Given the database with <init_state> cross(es)
+    When the App User delete the cross
+    Then the database have <end_state> cross(es)
+    Examples:
+      | init_state | end_state |
+      | 1          | 0         |
