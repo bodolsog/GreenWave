@@ -25,13 +25,7 @@ public class CRUDStepdefs {
     }
 
     @After("@db")
-    private void clearDatabase(){
-        try(Transaction tx = db.beginTx();
-            Result result = db.execute( "MATCH (n) DETACH DELETE n" ) ) {
-            tx.success();
-        } catch ( Exception e ) {
-            e.printStackTrace();
-        }
+    private void closeDatabase(){
         db.shutdown();
     }
 
@@ -51,7 +45,6 @@ public class CRUDStepdefs {
 
     @Then("^the database have (\\d+) crosses$")
     public void the_database_have_crosses(int end_state) throws Throwable {
-        System.out.println("begin");
         int count = 0;
         try (Transaction tx = db.beginTx()) {
             ResourceIterator<Node> res = db.findNodes(Nodes.CROSS);

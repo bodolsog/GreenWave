@@ -12,4 +12,5 @@ Feature: CRUD
     Examples:
       | init_state | added_crosses | end_state |
       | 0          | 1             | 1         |
+      | 1          | 1             | 2         |
 
