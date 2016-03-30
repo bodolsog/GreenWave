@@ -22,8 +22,12 @@ def neo4jVersion = "2.3.2"
 def cucumberVersion = "1.2.4"
 
 dependencies {
-    // Neo4j database
+    // Neo4j database.
     compile "org.neo4j:neo4j:${neo4jVersion}"
+
+    // Needed for create temporary database in tests.
+    testCompile "org.neo4j:neo4j-kernel:${neo4jVersion}:tests"
+    testCompile "org.neo4j:neo4j-io:${neo4jVersion}:tests"
 
     // Neo4j server (only need to run Neo4j browser).
     compile "org.neo4j.app:neo4j-server:${neo4jVersion}"
