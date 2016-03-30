@@ -30,3 +30,6 @@ Feature: CRUD
     Examples:
       | init_state | end_state |
       | 1          | 0         |
+      | 2          | 1         |
+      | 5          | 4         |
+      | 10         | 9         |

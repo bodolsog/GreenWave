@@ -5,6 +5,6 @@ public interface Dao<T> {
     boolean create(T object);
     //<T> T read();
     //boolean update();
-    //boolean delete();
+    boolean delete(long id);
 
 }
