@@ -1,10 +1,7 @@
 package pl.bodolsog.greenwave.model;
 
 import org.apache.commons.beanutils.ResultSetIterator;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Result;
-import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.*;
 import pl.bodolsog.greenwave.model.Dao;
 
 public class Crosses implements Dao<Cross> {
@@ -12,6 +9,21 @@ public class Crosses implements Dao<Cross> {
 
     public Crosses(GraphDatabaseService db){
         this.db = db;
+    }
+
+    @Override
+    public Cross read(long id) {
+        Cross r = null;
+        try(Transaction tx = db.beginTx()) {
+            Node n = db.getNodeById(id);
+            r = new Cross();
+            r.setId(n.getId());
+
+            tx.success();
+        } catch ( NotFoundException e) {
+            return null;
+        }
+        return r;
     }
 
     @Override
