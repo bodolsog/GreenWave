@@ -1,75 +1,126 @@
 package pl.bodolsog.greenwave.tools;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javafx.scene.control.TextInputDialog;
+
+import java.io.*;
+import java.util.Optional;
 import java.util.Properties;
 
+
 /**
- * Handle properties from config.properties file.
+ * Handles properties from config file.
  *
- * @author Paweł B.B. Drozd
  */
 public class PropertiesManager {
 
-    private String propertiesPath = "config.properties";
-    private Properties properties = new Properties();
+    // Path to $HOME/.grenwave directory
+    private String propertiesPath = System.getProperty("user.home") +File.separator +".greenwave";
+
+    // Path to config file
+    private String propertiesFilepath = propertiesPath + File.separator + "config";
+
+    // Config file
+    private File configFile;
+
+    // Properties reference
+    private Properties properties;
+
 
     /**
-     * Constructor create properties object from stream to config.properties file.
+     * Constructor. Open properties file and load all properties into memory. If file not exist - show dialog that ask
+     * about GoogleMaps API Key and save it to new created config file.
+     *
      */
     public PropertiesManager() {
 
-        File propertiesFile = new File(propertiesPath);
+        // Initialize properties.
+        properties = new Properties();
 
-        // Create file with default data if not exists yet.
-        if (!propertiesFile.exists()){
+        // Create necessary dirs.
+        File propertiesDir = new File(propertiesPath);
+        if (!propertiesDir.exists())
+            propertiesDir.mkdirs();
+
+        configFile = new File(propertiesFilepath);
+        if ( !configFile.exists() ){
+            // Dialog for set GoogleMaps API key.
+            TextInputDialog dialog = new TextInputDialog("");
+            dialog.setTitle("GoogleMaps Api Key");
+            dialog.setHeaderText("GoogleMaps API Key must be set.");
+            dialog.setContentText("Your GoogleMaps API Key:");
+
+            Optional<String> result = dialog.showAndWait();
+
+            // Save GoogleMaps API Key to config file.
             try {
-                propertiesFile.createNewFile();
-                setDefaultProperties();
-                FileOutputStream out = new FileOutputStream(propertiesFile);
+                configFile.createNewFile();
+                FileOutputStream out = new FileOutputStream(configFile);
+                result.ifPresent(api -> properties.setProperty("googleAPIKey", api));
                 properties.store(out, "");
                 out.close();
             } catch (IOException e) {
                 System.out.println("Sorry, could not create or load config file.");
             }
         }
+
+        // Open config file.
         try {
-            FileInputStream in = new FileInputStream(propertiesFile);
+            FileInputStream in = new FileInputStream(configFile);
             properties.load(in);
-        } catch (IOException e){
+            in.close();
+        } catch (IOException e) {
             System.out.println("Sorry, could not load config file.");
         }
-
     }
 
+
     /**
-     * Read from config file Google API key.
+     * Read GoogleMaps API Key from file.
      *
-     * @return Google API key
+     * @return String Google API key
      */
     public String getGoogleAPIKey() {
+        return getGoogleAPIKey(false);
+    }
+
+
+    /**
+     * Reload config and read GoogleMaps API Key from file.
+     *
+     * @param reload true if config file should be reloaded
+     * @return Google API key
+     */
+    public String getGoogleAPIKey(boolean reload) {
+        if(reload) {
+            try {
+                FileInputStream in = new FileInputStream(configFile);
+                properties.load(in);
+                in.close();
+            } catch (IOException e) {
+                System.out.println("Sorry, could not load config file.");
+            }
+        }
         return properties.getProperty("googleAPIKey");
     }
 
-    public int[] getSpeedList() {
-        String speeds = properties.getProperty("speeds");
-        String[] speedsList = speeds.split(",");
-        int len = speedsList.length;
-        int[] rSpeeds = new int[len];
-        for (int i = 0; i < len; i++) {
-            rSpeeds[i] = Integer.parseInt(speedsList[i]);
+
+    /**
+     * Set GoogleMaps API key.
+     *
+     * @param newValue new key
+     * @return true if saved, false otherwise
+     */
+    public boolean setGoogleAPIKey(String newValue) {
+        try {
+            FileOutputStream out = new FileOutputStream(configFile);
+            properties.setProperty("googleAPIKey", newValue);
+            properties.store(out, "");
+            out.close();
+            return true;
+        } catch ( IOException e ) {
+            e.printStackTrace();
+            System.out.println("Sorry, could not open and write config file.");
         }
-
-        return rSpeeds;
-    }
-
-    public int getAcceleration() {
-        return Integer.parseInt(properties.getProperty("acceleration"));
-    }
-
-    private void setDefaultProperties(){
-        properties.setProperty("googleAPIKey", "[here add your Google API Key for browsers]");
+        return false;
     }
 }

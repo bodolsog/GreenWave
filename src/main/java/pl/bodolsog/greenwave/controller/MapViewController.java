@@ -1,16 +1,13 @@
 package pl.bodolsog.greenwave.controller;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import pl.bodolsog.greenwave.MainApp;
 import pl.bodolsog.greenwave.tools.PropertiesManager;
-
-import java.util.ArrayList;
-import java.util.Optional;
 
 public class MapViewController {
 
@@ -19,20 +16,36 @@ public class MapViewController {
 
     @FXML
     private WebView webView;
-    private WebEngine webEngine;
+
+    private static WebEngine webEngine;
+    private static PropertiesManager prop = new PropertiesManager();
 
     /**
      * Initializes view.
      */
     @FXML
     private void initialize(){
+        webView.setContextMenuEnabled(false);
         // Initializes web engine and Google Maps into.
         webEngine = webView.getEngine();
+        webEngine.setOnAlert(new EventHandler<WebEvent<String>>() {
+            @Override
+            public void handle(WebEvent<String> event) {
+                if(event.getData().equals("command:inject")) {
+                    JSObject window = (JSObject) webEngine.executeScript("window");
+                    window.setMember("api", prop.getGoogleAPIKey(true));
+//                    window.setMember("properties", prop);
+//                    window.setMember("controller", this);
+                }
+                else{
+                    System.out.println(event);
+                }
+            }
+        });
         webEngine.load(getClass().getResource("/googlemap.html").toString());
+    }
 
-        // Register classes for use from javascript.
-        JSObject window = (JSObject) webEngine.executeScript("window");
-        window.setMember("properties", new PropertiesManager());
-        window.setMember("controller", this);
+    public void reloadWebView(){
+        webEngine.reload();
     }
 }
