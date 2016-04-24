@@ -1,6 +1,7 @@
 package pl.bodolsog.greenwave.tools;
 
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.web.WebView;
 
 import java.io.*;
 import java.util.Optional;

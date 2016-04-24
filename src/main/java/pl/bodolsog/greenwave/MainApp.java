@@ -101,10 +101,9 @@ public class MainApp extends Application {
             stage.setScene(scene);
 
             ConfigDialogController controller = loader.getController();
+            controller.setWebEngine(mapViewController.getWebEngine());
             controller.setDialogStage(stage);
-
             stage.showAndWait();
-            mapViewController.reloadWebView();
 
         } catch ( IOException e ){
             e.printStackTrace();

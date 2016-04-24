@@ -19,6 +19,7 @@ public class MapViewController {
 
     private static WebEngine webEngine;
     private static PropertiesManager prop = new PropertiesManager();
+    private JSObject window;
 
     /**
      * Initializes view.
@@ -26,24 +27,33 @@ public class MapViewController {
     @FXML
     private void initialize(){
         webView.setContextMenuEnabled(false);
+
         // Initializes web engine and Google Maps into.
         webEngine = webView.getEngine();
+
+        // Set up window and controller.
+        window = (JSObject) webEngine.executeScript("window");
+        window.setMember("controller", this);
+
+        // Load view.
+        webEngine.load(getClass().getResource("/googlemap.html").toString());
+
         webEngine.setOnAlert(new EventHandler<WebEvent<String>>() {
             @Override
             public void handle(WebEvent<String> event) {
-                if(event.getData().equals("command:inject")) {
-                    JSObject window = (JSObject) webEngine.executeScript("window");
-                    window.setMember("api", prop.getGoogleAPIKey(true));
-                    // Probably unnecesary
-                    // window.setMember("properties", prop);
-                    window.setMember("controller", this);
+                if(event.getData().equals("command:injectGoogleMapsAPI")) {
+                    window.setMember("apiKey", prop.getGoogleAPIKey(true));
                 }
             }
         });
-        webEngine.load(getClass().getResource("/googlemap.html").toString());
     }
 
-    public void reloadWebView(){
-        webEngine.reload();
+    /**
+     * Getter for property 'webEngine'.
+     *
+     * @return Value for property 'webEngine'.
+     */
+    public static WebEngine getWebEngine() {
+        return webEngine;
     }
 }
