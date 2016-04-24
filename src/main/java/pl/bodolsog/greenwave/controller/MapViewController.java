@@ -34,11 +34,9 @@ public class MapViewController {
                 if(event.getData().equals("command:inject")) {
                     JSObject window = (JSObject) webEngine.executeScript("window");
                     window.setMember("api", prop.getGoogleAPIKey(true));
-//                    window.setMember("properties", prop);
-//                    window.setMember("controller", this);
-                }
-                else{
-                    System.out.println(event);
+                    // Probably unnecesary
+                    // window.setMember("properties", prop);
+                    window.setMember("controller", this);
                 }
             }
         });
