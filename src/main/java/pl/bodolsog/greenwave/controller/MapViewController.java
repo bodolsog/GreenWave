@@ -9,6 +9,7 @@ import netscape.javascript.JSObject;
 import pl.bodolsog.greenwave.MainApp;
 import pl.bodolsog.greenwave.model.Cross;
 import pl.bodolsog.greenwave.model.Crosses;
+import pl.bodolsog.greenwave.model.DatabaseSingleton;
 import pl.bodolsog.greenwave.tools.PropertiesManager;
 
 public class MapViewController {
@@ -31,6 +32,10 @@ public class MapViewController {
      */
     @FXML
     private void initialize(){
+        DatabaseSingleton ds = DatabaseSingleton.getInstance();
+        crosses = new Crosses(ds.getDb());
+
+
         webView.setContextMenuEnabled(false);
 
         // Initializes web engine and Google Maps into.
@@ -64,19 +69,14 @@ public class MapViewController {
     }
 
 
-    public void createMarker(JSObject JSMarker){
-        crosses.create(getOrCreateCross(JSMarker));
+    public void createMarker(JSObject JSMarker) {
+        long id = crosses.create(JSMarker);
+        JSMarker.setMember("id", id);
     }
 
     public void updateMarker(JSObject JSMarker){
-
+        crosses.update(JSMarker);
     }
 
-    private Cross getOrCreateCross(JSObject JSMarker){
-        JSObject position = (JSObject) JSMarker.call("getPosition");
-        double lat = (double) position.call("lat");
-        double lng = (double) position.call("lng");
 
-        return new Cross(lat, lng);
-    }
 }

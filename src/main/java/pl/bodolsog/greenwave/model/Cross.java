@@ -1,9 +1,11 @@
 package pl.bodolsog.greenwave.model;
 
+import java.util.Map;
+
 public class Cross {
     private long id;
-    private double lat;
-    private double lng;
+    private Double lat;
+    private Double lng;
 
     public Cross(){}
 
@@ -12,10 +14,13 @@ public class Cross {
         this.lng = lng;
     }
 
-    public Cross(long id, double lat, double lng){
-
+    public Cross(long id, Map<String, Object> properties){
+        this.id = id;
+        if(properties.containsKey("lat"))
+            this.lat = Double.valueOf(properties.get("lat").toString());
+        if(properties.containsKey("lng"))
+            this.lng = Double.valueOf(properties.get("lng").toString());
     }
-
 
     /**
      * Getter for property 'id'.

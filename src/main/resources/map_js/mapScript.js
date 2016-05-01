@@ -2,7 +2,7 @@
 function initialize() {
 
   /* Domestic center on Biala Podlaska. */
-  var latlng = new google.maps.LatLng(52.03, 23.14);
+  var latlng = new google.maps.LatLng(52.033924, 23.119278);
 
   var map = new google.maps.Map(document.getElementById("map_canvas"), {
     zoom: 15,
@@ -16,6 +16,9 @@ function initialize() {
     scaleControl: true
   });
 
+  // Mao that holds all markers with id as key.
+  markersMap = {};
+
   map.addListener('click', function (event) {
 
     // Create marker
@@ -25,12 +28,18 @@ function initialize() {
       map: map
     });
 
-    // Add to database.
+    // Add to markersMap and database
     controller.createMarker(marker);
+    markersMap[marker.id] = marker;
 
     // Create infowindow
     marker.infowindow = new google.maps.InfoWindow({
       content: infowindowContent(marker)
+    });
+
+    // Update marker on end of dragging
+    marker.addListener('click', function () {
+      this.infowindow.open(map, this);
     });
 
     // Update marker on end of dragging
@@ -49,6 +58,8 @@ function initialize() {
 function infowindowContent(marker) {
   return "<div class='infowindow-content'>" +
     "   <dl>" +
+    "       <dt>Id:</dt>" +
+    "       <dd>"+ marker.id +"</dd>" +
     "       <dt>Coordinates:</dt>" +
     "       <dd>Lat:" + marker.getPosition().lat() + ", Lng: " + marker.getPosition().lng() + "</dd>" +
     "   </dl>" +

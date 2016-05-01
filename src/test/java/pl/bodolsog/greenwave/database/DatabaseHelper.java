@@ -4,12 +4,13 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import pl.bodolsog.greenwave.model.Crosses;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DatabaseHelper {
     private GraphDatabaseService db;
 
     protected Crosses crosses;
-    private ArrayList<Long> ids;
+    private HashMap<String, Long> ids;
 
     public DatabaseHelper(DatabaseRunner dbr){
         db = dbr.getDb();
@@ -25,13 +26,13 @@ public class DatabaseHelper {
     }
 
     /**
-     * Getter for property 'ids'.
+     * Getter for property 'crossesIds'.
      *
-     * @return Value for property 'ids'.
+     * @return Value for property 'crossesIds'.
      */
-    public ArrayList<Long> getIds() {
+    public HashMap<String, Long> getIds() {
         if(ids == null)
-            ids = new ArrayList<>();
+            ids = new HashMap<>();
         return ids;
     }
 

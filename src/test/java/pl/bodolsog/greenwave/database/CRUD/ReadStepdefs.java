@@ -2,6 +2,10 @@ package pl.bodolsog.greenwave.database.CRUD;
 
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.neo4j.graphdb.NotFoundException;
 import pl.bodolsog.greenwave.database.DatabaseHelper;
 import pl.bodolsog.greenwave.model.Cross;
 import pl.bodolsog.greenwave.model.Crosses;
@@ -26,7 +30,7 @@ public class ReadStepdefs {
      * @throws Throwable
      */
     @When("^the App User try to get cross with id (\\d+)$")
-    public void theAppUserWantGetCrossWithId(long id) throws Throwable {
+    public void the_App_User_try_to_get_cross_with_id(long id) throws Throwable {
         readedCross = crosses.read(id);
     }
 
@@ -36,16 +40,7 @@ public class ReadStepdefs {
      * @throws Throwable
      */
     @Then("^a cross with (\\d+) is returned$")
-    public void aCrossWithIdIsReturned(long id) throws Throwable {
+    public void a_cross_with_id_is_returned(long id) throws Throwable {
         assertThat(readedCross.getId(), is(id));
-    }
-
-    /**
-     * Check if returned value is null
-     * @throws Throwable
-     */
-    @Then("^a null is returned$")
-    public void aNullIsReturned() throws Throwable {
-        assertThat(readedCross, is(nullValue()));
     }
 }

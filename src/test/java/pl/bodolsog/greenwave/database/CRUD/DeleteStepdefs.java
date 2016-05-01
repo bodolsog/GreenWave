@@ -4,12 +4,12 @@ import cucumber.api.java.en.When;
 import pl.bodolsog.greenwave.database.DatabaseHelper;
 import pl.bodolsog.greenwave.model.Crosses;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DeleteStepdefs {
 
     private Crosses crosses;
-    private ArrayList<Long> ids;
+    private HashMap<String, Long> ids;
 
     public DeleteStepdefs(DatabaseHelper dbh){
         ids = dbh.getIds();
@@ -21,7 +21,7 @@ public class DeleteStepdefs {
      * @throws Throwable
      */
     @When("^the App User delete the cross with id (\\d+)$")
-    public void the_App_User_delete_a_cross_es(long id) throws Throwable {
+    public void the_App_User_delete_the_cross_with_id(long id) {
         crosses.delete(id);
         ids.remove(id);
     }

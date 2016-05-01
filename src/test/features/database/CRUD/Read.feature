@@ -14,9 +14,3 @@ Feature: Read
       | 3          | 0  |
       | 3          | 1  |
       | 3          | 2  |
-
-  @db
-  Scenario: Read a cross, that not exist in database
-    Given the database with 3 cross(es)
-    When the App User try to get cross with id 5
-    Then a null is returned

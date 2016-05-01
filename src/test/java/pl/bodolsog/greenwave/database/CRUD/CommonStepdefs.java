@@ -6,7 +6,7 @@ import org.neo4j.graphdb.*;
 import pl.bodolsog.greenwave.database.DatabaseHelper;
 import pl.bodolsog.greenwave.model.Nodes;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -14,11 +14,9 @@ import static org.hamcrest.core.Is.is;
 public class CommonStepdefs {
 
     private GraphDatabaseService db;
-    private ArrayList<Long> ids;
 
     public CommonStepdefs(DatabaseHelper dbh){
         db = dbh.getDb();
-        ids = dbh.getIds();
     }
 
     /**
@@ -27,12 +25,12 @@ public class CommonStepdefs {
      * @throws Throwable
      */
     @Given("^the database with (\\d+) cross\\(es\\)$")
-    public void the_database_with_crosses(int init_state) throws Throwable {
+    public void theDatabaseWithSomeCrosses(int init_state) {
         try (Transaction tx = db.beginTx()) {
             Node n = null;
             for (int i = 0; i < init_state; i++) {
                 n = db.createNode(Nodes.CROSS);
-                ids.add(n.getId());
+                n.getId();
             }
             tx.success();
         }
