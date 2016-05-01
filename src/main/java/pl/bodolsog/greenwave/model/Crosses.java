@@ -27,7 +27,7 @@ public class Crosses implements Dao<Cross> {
     }
 
     @Override
-    public boolean create(Cross object) {
+    public boolean create(Cross cross) {
         try(Transaction tx = db.beginTx()){
             db.createNode(Nodes.CROSS);
             tx.success();

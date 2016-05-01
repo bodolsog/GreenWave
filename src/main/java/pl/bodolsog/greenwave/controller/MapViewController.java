@@ -7,12 +7,17 @@ import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import pl.bodolsog.greenwave.MainApp;
+import pl.bodolsog.greenwave.model.Cross;
+import pl.bodolsog.greenwave.model.Crosses;
 import pl.bodolsog.greenwave.tools.PropertiesManager;
 
 public class MapViewController {
 
     // Reference to main app.
     private MainApp mainApp;
+
+    // Crosses Dao.
+    private Crosses crosses;
 
     @FXML
     private WebView webView;
@@ -48,6 +53,7 @@ public class MapViewController {
         });
     }
 
+
     /**
      * Getter for property 'webEngine'.
      *
@@ -55,5 +61,22 @@ public class MapViewController {
      */
     public static WebEngine getWebEngine() {
         return webEngine;
+    }
+
+
+    public void createMarker(JSObject JSMarker){
+        crosses.create(getOrCreateCross(JSMarker));
+    }
+
+    public void updateMarker(JSObject JSMarker){
+
+    }
+
+    private Cross getOrCreateCross(JSObject JSMarker){
+        JSObject position = (JSObject) JSMarker.call("getPosition");
+        double lat = (double) position.call("lat");
+        double lng = (double) position.call("lng");
+
+        return new Cross(lat, lng);
     }
 }
